@@ -1,4 +1,4 @@
-# Document Q/A bot using LangChain.
+# Simple document-aware Q/A bot.
 
 ## Setup
 
