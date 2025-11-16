@@ -1,4 +1,4 @@
-# Simple Document Q/A bot to run local LLMs.
+# Document Q/A bot using LangChain.
 
 ## Setup
 
