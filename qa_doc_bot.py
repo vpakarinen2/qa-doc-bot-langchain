@@ -144,7 +144,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--trust-remote-code",
         action="store_true",
-        help="Allow execution of custom remote code for this model (needed for some repos).",
+        help="Allow execution of custom remote code.",
     )
     return parser.parse_args()
 
@@ -217,3 +217,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
