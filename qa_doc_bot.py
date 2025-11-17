@@ -29,7 +29,7 @@ class QwenLocalLLM(LLM):
 
     def __init__(
         self,
-        model_name: str = "Qwen/Qwen3-4B-Thinking-2507",
+        model_name: Optional[str] = None,
         device: Optional[str] = None,
         trust_remote_code: bool = False,
         **kwargs,
@@ -217,4 +217,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
