@@ -35,3 +35,7 @@
 
 - `--trust-remote-code`
   - Description: Allow execution of custom remote code.
+
+## Author
+
+Ville Pakarinen (@vpakarinen2)
