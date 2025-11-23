@@ -7,7 +7,7 @@
 - ``cd qa-doc-bot-langchain``
 
 2. **Create virtual environment (Windows, Python 3.11)**
-- ``py -3.11 -m venv .venv``
+- ``python3.11 -m venv .venv``
 - ``.venv\Scripts\Activate.ps1`` (source .venv/bin/activate on Linux)
 
 3. **Install dependencies**
