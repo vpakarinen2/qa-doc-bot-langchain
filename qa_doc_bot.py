@@ -7,6 +7,7 @@ from langchain.chains.combine_documents import create_stuff_documents_chain
 from transformers import AutoModelForCausalLM, AutoTokenizer
 from typing import Optional, List, Any
 from pydantic.v1 import Field
+from peft import PeftModel
 from pathlib import Path
 
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -17,7 +18,7 @@ from langchain.vectorstores import FAISS
 from langchain.llms.base import LLM
 
 
-class QwenLocalLLM(LLM):
+class LocalLLM(LLM):
     """LangChain LLM wrapper."""
     tokenizer: Any = Field(default=None, exclude=True)
     model: Any = Field(default=None, exclude=True)
@@ -32,6 +33,7 @@ class QwenLocalLLM(LLM):
         model_name: Optional[str] = None,
         device: Optional[str] = None,
         trust_remote_code: bool = False,
+        lora_path: Optional[str] = None,
         **kwargs,
     ):
         super().__init__(**kwargs)
@@ -47,7 +49,12 @@ class QwenLocalLLM(LLM):
             model_name,
             dtype=torch.float16,
             trust_remote_code=self.trust_remote_code,
-        ).to(self.device)
+        )
+
+        if lora_path:
+            self.model = PeftModel.from_pretrained(self.model, lora_path)
+
+        self.model = self.model.to(self.device)
 
     @property
     def _llm_type(self) -> str:
@@ -139,12 +146,19 @@ def parse_args() -> argparse.Namespace:
         type=str,
         required=False,
         default="Qwen/Qwen3-4B-Thinking-2507",
-        help="Hugging Face model id to load.",
+        help="Hugging Face base model id to load (e.g. Qwen/Qwen3-4B-Thinking-2507).",
     )
     parser.add_argument(
         "--trust-remote-code",
         action="store_true",
         help="Allow execution of custom remote code.",
+    )
+    parser.add_argument(
+        "-l",
+        "--lora-name",
+        type=str,
+        required=False,
+        help=("Optional LoRA adapter to apply on top of the base model."),
     )
     return parser.parse_args()
 
@@ -164,9 +178,13 @@ def main():
 
     print(f"Loading model: {args.model_name}")
 
-    llm = QwenLocalLLM(
+    if args.lora_path:
+        print(f"Loading LoRA adapter: {args.lora_path}")
+
+    llm = LocalLLM(
         model_name=args.model_name,
         trust_remote_code=args.trust_remote_code,
+        lora_path=args.lora_path,
     )
 
     rag_prompt = PromptTemplate(
