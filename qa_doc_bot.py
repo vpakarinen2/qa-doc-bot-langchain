@@ -123,7 +123,7 @@ def build_vectorstore(documents):
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Simple Document Q/A Bot using LangChain."
+        description="Document Q/A Bot using LangChain with local HF model (optional LoRA)."
     )
     parser.add_argument(
         "-q",
@@ -235,4 +235,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
