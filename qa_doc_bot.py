@@ -1,4 +1,4 @@
-"""Simple Document Q/A Bot using LangChain."""
+"""Document Q/A Bot using LangChain with optional LoRA adapter."""
 
 import argparse
 import torch
@@ -235,3 +235,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
