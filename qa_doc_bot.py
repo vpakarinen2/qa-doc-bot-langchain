@@ -149,16 +149,16 @@ def parse_args() -> argparse.Namespace:
         help="Hugging Face base model id to load (e.g. Qwen/Qwen3-4B-Thinking-2507).",
     )
     parser.add_argument(
-        "--trust-remote-code",
-        action="store_true",
-        help="Allow execution of custom remote code.",
-    )
-    parser.add_argument(
         "-l",
         "--lora-name",
         type=str,
         required=False,
         help=("Optional LoRA adapter to apply on top of the base model."),
+    )
+    parser.add_argument(
+        "--trust-remote-code",
+        action="store_true",
+        help="Allow execution of custom remote code.",
     )
     return parser.parse_args()
 
@@ -235,5 +235,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
