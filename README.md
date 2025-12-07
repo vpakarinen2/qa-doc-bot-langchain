@@ -6,7 +6,7 @@
 - ``git clone https://github.com/vpakarinen2/qa-doc-bot-langchain.git``
 - ``cd qa-doc-bot-langchain``
 
-2. **Create virtual environment (Windows, Python 3.11)**
+2. **Create virtual environment (Python 3.11)**
 - ``python -m venv .venv``
 - ``.venv\Scripts\Activate.ps1`` (source .venv/bin/activate on Linux)
 
