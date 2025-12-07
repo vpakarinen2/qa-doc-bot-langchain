@@ -1,4 +1,4 @@
-# Document-aware Q/A bot
+# Document question-answering (Q/A) bot.
 
 ## Setup
 
