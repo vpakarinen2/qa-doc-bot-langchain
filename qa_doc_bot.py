@@ -153,7 +153,7 @@ def parse_args() -> argparse.Namespace:
         "--lora-name",
         type=str,
         required=False,
-        help=("Optional LoRA adapter to apply on top of the base model."),
+        help="Optional LoRA adapter to apply on top of the base model.",
     )
     parser.add_argument(
         "--trust-remote-code",
@@ -235,6 +235,7 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 
 
 
