@@ -17,6 +17,9 @@ from langchain.prompts import PromptTemplate
 from langchain.vectorstores import FAISS
 from langchain.llms.base import LLM
 
+from math_tool import evaluate_math_expression
+from time_tool import get_current_time
+
 
 class LocalLLM(LLM):
     """LangChain LLM wrapper."""
@@ -121,6 +124,19 @@ def build_vectorstore(documents):
     return vectorstore
 
 
+def run_tool_mode(tool_name: str, question: str, city: Optional[str] = None) -> str:
+    if tool_name == "math":
+        result = evaluate_math_expression(question)
+        return str(result)
+
+    if tool_name == "time":
+        city_input = city if city is not None else "Helsinki"
+        current_time, display_city = get_current_time(city_input)
+        return f"{display_city}: {current_time}"
+
+    raise ValueError(f"Unsupported tool: {tool_name}")
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Document Q/A Bot using LangChain with local HF model (optional LoRA)."
@@ -137,7 +153,7 @@ def parse_args() -> argparse.Namespace:
         "-d",
         "--doc",
         type=str,
-        required=True,
+        required=False,
         help="Path to the document (.pdf or .txt).",
     )
     parser.add_argument(
@@ -156,15 +172,51 @@ def parse_args() -> argparse.Namespace:
         help="Optional LoRA adapter to apply on top of the base model.",
     )
     parser.add_argument(
+        "-t",
+        "--tool",
+        type=str,
+        choices=["math", "time"],
+        required=False,
+        help="Optional tool to use (currently: math, time).",
+    )
+    parser.add_argument(
+        "-c",
+        "--city",
+        type=str,
+        required=False,
+        default="Helsinki",
+        help=(
+            "City for time tool (default: Helsinki). "
+            "Examples: Moscow, Ottawa, Washington D.C., Beijing, Brasilia, Canberra."
+        ),
+    )
+    parser.add_argument(
         "--trust-remote-code",
         action="store_true",
         help="Allow execution of custom remote code.",
     )
-    return parser.parse_args()
+    args = parser.parse_args()
+
+    if not args.doc and not args.tool:
+        parser.error("Either --doc must be provided for document Q/A or --tool must be specified.")
+
+    return args
 
 
 def main():
     args = parse_args()
+
+    if args.tool:
+        if args.tool == "time":
+            print(f"\nRunning tool 'time' for city: {args.city}\n")
+        else:
+            print(f"\nRunning tool '{args.tool}' with input: {args.question}\n")
+
+        tool_output = run_tool_mode(args.tool, args.question, getattr(args, "city", None))
+        print("Tool output:")
+        print(tool_output)
+        return
+
     doc_path = Path(args.doc)
 
     if not doc_path.exists():
@@ -178,13 +230,13 @@ def main():
 
     print(f"Loading model: {args.model_name}")
 
-    if args.lora_path:
-        print(f"Loading LoRA adapter: {args.lora_path}")
+    if args.lora_name:
+        print(f"Loading LoRA adapter: {args.lora_name}")
 
     llm = LocalLLM(
         model_name=args.model_name,
         trust_remote_code=args.trust_remote_code,
-        lora_path=args.lora_path,
+        lora_path=args.lora_name,
     )
 
     rag_prompt = PromptTemplate(
@@ -235,7 +287,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-
-
