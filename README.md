@@ -35,6 +35,12 @@
  
 - `-d`, `--doc`
   - Description: Path to the document (.pdf or .txt).
+ 
+- `-t`, `--tool`  
+  - Description: Optional tool to use (currently: math, time).
+ 
+- `-c`, `--city`  
+  - Description: City for time tool (default: Helsinki).
 
 - `--trust-remote-code`
   - Description: Allow execution of custom remote code.
