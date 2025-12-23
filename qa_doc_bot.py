@@ -17,8 +17,8 @@ from langchain.prompts import PromptTemplate
 from langchain.vectorstores import FAISS
 from langchain.llms.base import LLM
 
-from math_tool import evaluate_math_expression
-from time_tool import get_current_time
+from tools.math_tool import evaluate_math_expression
+from tools.time_tool import get_current_time
 
 
 class LocalLLM(LLM):
